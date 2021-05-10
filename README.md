@@ -3,8 +3,8 @@ Basic IOT - Control On/Off LED From Web
 
 | Components |
 | ---------- |
-| NodeMCU ESP8266 |
-| LED 4 pcs |
+| NodeMCU |
+| LED |
 | Resistor 330 Ohm |
 | LCD i2c 16x2 |
 | Jumper Wires |
