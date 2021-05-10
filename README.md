@@ -1,4 +1,13 @@
 # esp8266-led
 Basic IOT - Control On/Off LED From Web
 
+| Components |
+| ---------- |
+| NodeMCU ESP8266 |
+| LED 4 pcs |
+| Resistor 330 Ohm |
+| LCD i2c 16x2 |
+| Jumper Wires |
+| Protoboard |
+
 <img src="https://github.com/arjunapanji21/esp8266-led/blob/main/image.jpeg" alt="alt text" width="840px" height="100%">
