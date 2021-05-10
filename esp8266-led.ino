@@ -1,9 +1,14 @@
 #include <ESP8266WiFi.h>
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-const char* ssid = "YOUR_WIFI_NAME";
-const char* password = "YOUR_WIFI_PASSWORD";
+#define LED1 D5
+#define LED2 D6
+#define LED3 D7
+#define LED4 D8
 
-const int LED1 = 5;
+const char* ssid = "Ursi Aulia";
+const char* password = "aulia123";
 
 // Create an instance of the server
 // specify the port to listen on as an argument
@@ -12,11 +17,22 @@ WiFiServer server(80);
 void setup() {
   Serial.begin(115200);
 
+  // initialize lcd
+  lcd.init();
+  // turn on lcd backlight
+  lcd.backlight();
+
   // prepare LED
   // pinMode(LED_BUILTIN, OUTPUT);
   // digitalWrite(LED_BUILTIN, 0);
   pinMode(LED1, OUTPUT);
   digitalWrite(LED1, LOW);
+  pinMode(LED2, OUTPUT);
+  digitalWrite(LED2, LOW);
+  pinMode(LED3, OUTPUT);
+  digitalWrite(LED3, LOW);
+  pinMode(LED4, OUTPUT);
+  digitalWrite(LED4, LOW);
 
   // Connect to WiFi network
   Serial.println();
@@ -26,10 +42,12 @@ void setup() {
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
+  lcd.print("Menghubungkan");
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(F("."));
+    lcd.print(".");
   }
   Serial.println();
   Serial.println(F("WiFi connected"));
@@ -40,9 +58,16 @@ void setup() {
 
   // Print the IP address
   Serial.println(WiFi.localIP());
+
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("SSID: ");
+  lcd.print(ssid);
+  lcd.setCursor(0,1);
+  lcd.print(WiFi.localIP());
 }
 
-void loop() {  
+void loop() {
   // Check if a client has connected
   WiFiClient client = server.available();
   if (!client) {
@@ -58,18 +83,48 @@ void loop() {
   Serial.println(req);
 
   // Match the request
-  int val;
-  if (req.indexOf(F("/gpio/0")) != -1) {
-    val = 0;
-  } else if (req.indexOf(F("/gpio/1")) != -1) {
-    val = 1;
+  int value1, value2, value3, value4;
+  if (req.indexOf(F("/gpio1/0")) != -1) {
+    value1 = 0;
+  } else if (req.indexOf(F("/gpio1/1")) != -1) {
+    value1 = 1;
   } else {
     Serial.println(F("invalid request"));
-    val = digitalRead(LED1);
+    value1 = digitalRead(LED1);
+  }
+
+  if (req.indexOf(F("/gpio2/0")) != -1) {
+    value2 = 0;
+  } else if (req.indexOf(F("/gpio2/1")) != -1) {
+    value2 = 1;
+  } else {
+    Serial.println(F("invalid request"));
+    value2 = digitalRead(LED2);
+  }
+
+  if (req.indexOf(F("/gpio3/0")) != -1) {
+    value3 = 0;
+  } else if (req.indexOf(F("/gpio3/1")) != -1) {
+    value3 = 1;
+  } else {
+    Serial.println(F("invalid request"));
+    value3 = digitalRead(LED3);
+  }
+
+  if (req.indexOf(F("/gpio4/0")) != -1) {
+    value4 = 0;
+  } else if (req.indexOf(F("/gpio4/1")) != -1) {
+    value4 = 1;
+  } else {
+    Serial.println(F("invalid request"));
+    value4 = digitalRead(LED4);
   }
 
   // Set LED according to the request
-  digitalWrite(LED1, val);
+  digitalWrite(LED1, value1);
+  digitalWrite(LED2, value2);
+  digitalWrite(LED3, value3);
+  digitalWrite(LED4, value4);
 
   // read/ignore the rest of the request
   // do not client.flush(): it is for output only, see below
@@ -81,13 +136,45 @@ void loop() {
   // Send the response to the client
   // it is OK for multiple small client.print/write,
   // because nagle algorithm will group them into one single packet
-  client.print(F("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>\r\nGPIO is now "));
-  client.print((val) ? F("high") : F("low"));
-  client.print(F("<br><br>Click <a href='http://"));
+  client.print(F("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>\r\n"));
+  client.print(F("<center><h1>"));
+
+  client.print(F("<br>PROJECT AKHIR MK"));
+  client.print(F("<br>URSI AULIA</h1>"));
+  
+  client.print(F("<h2><br><br>LED 1 "));
+  client.print((value1) ? F("AKTIF") : F("TIDAK AKTIF"));
+  client.print(F("<br><a href='http://"));
   client.print(WiFi.localIP());
-  client.print(F("/gpio/1'>here</a> to switch LED GPIO on, or <a href='http://"));
+  client.print(F("/gpio1/1'>ON</a> | <a href='http://"));
   client.print(WiFi.localIP());
-  client.print(F("/gpio/0'>here</a> to switch LED GPIO off.</html>"));
+  client.print(F("/gpio1/0'>OFF</a>"));
+
+  client.print(F("<br><br>LED 2 "));
+  client.print((value2) ? F("AKTIF") : F("TIDAK AKTIF"));
+  client.print(F("<br><a href='http://"));
+  client.print(WiFi.localIP());
+  client.print(F("/gpio2/1'>ON</a> | <a href='http://"));
+  client.print(WiFi.localIP());
+  client.print(F("/gpio2/0'>OFF</a>"));
+
+  client.print(F("<br><br>LED 3 "));
+  client.print((value3) ? F("AKTIF") : F("TIDAK AKTIF"));
+  client.print(F("<br><a href='http://"));
+  client.print(WiFi.localIP());
+  client.print(F("/gpio3/1'>ON</a> | <a href='http://"));
+  client.print(WiFi.localIP());
+  client.print(F("/gpio3/0'>OFF</a>"));
+
+  client.print(F("<br><br>LED 4 "));
+  client.print((value4) ? F("AKTIF") : F("TIDAK AKTIF"));
+  client.print(F("<br><a href='http://"));
+  client.print(WiFi.localIP());
+  client.print(F("/gpio4/1'>ON</a> | <a href='http://"));
+  client.print(WiFi.localIP());
+  client.print(F("/gpio4/0'>OFF</a>"));
+  
+  client.print(F("</h2></center></html>"));
 
   // The client will actually be *flushed* then disconnected
   // when the function returns and 'client' object is destroyed (out-of-scope)
