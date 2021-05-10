@@ -5,7 +5,7 @@ Basic IOT - Control On/Off LED From Web
 | ---------- |
 | NodeMCU |
 | LED |
-| Resistor 330 Ohm |
+| Resistor 220 Ohm |
 | LCD i2c 16x2 |
 | Jumper Wires |
 | Protoboard |
