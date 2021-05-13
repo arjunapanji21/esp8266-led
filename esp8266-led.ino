@@ -7,8 +7,8 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 #define LED3 D7
 #define LED4 D8
 
-const char* ssid = "Ursi Aulia";
-const char* password = "aulia123";
+const char* ssid = "YOUR_WIFI_NAME"; // change this ssid to suit your wifi name
+const char* password = "YOUR_WIFI_PASSWORD"; // change thispassword to suit your wifi password
 
 // Create an instance of the server
 // specify the port to listen on as an argument
@@ -42,7 +42,7 @@ void setup() {
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  lcd.print("Menghubungkan");
+  lcd.print("Connecting");
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -139,11 +139,11 @@ void loop() {
   client.print(F("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>\r\n"));
   client.print(F("<center><h1>"));
 
-  client.print(F("<br>PROJECT AKHIR MK"));
-  client.print(F("<br>URSI AULIA</h1>"));
+  client.print(F("<br>[IOT] LED CONTROLLER"));
+  client.print(F("<br>USING NodeMCU ESP8266</h1>"));
   
   client.print(F("<h2><br><br>LED 1 "));
-  client.print((value1) ? F("AKTIF") : F("TIDAK AKTIF"));
+  client.print((value1) ? F("ACTIVE") : F("INACTIVE"));
   client.print(F("<br><a href='http://"));
   client.print(WiFi.localIP());
   client.print(F("/gpio1/1'>ON</a> | <a href='http://"));
@@ -151,7 +151,7 @@ void loop() {
   client.print(F("/gpio1/0'>OFF</a>"));
 
   client.print(F("<br><br>LED 2 "));
-  client.print((value2) ? F("AKTIF") : F("TIDAK AKTIF"));
+  client.print((value2) ? F("ACTIVE") : F("INACTIVE"));
   client.print(F("<br><a href='http://"));
   client.print(WiFi.localIP());
   client.print(F("/gpio2/1'>ON</a> | <a href='http://"));
@@ -159,7 +159,7 @@ void loop() {
   client.print(F("/gpio2/0'>OFF</a>"));
 
   client.print(F("<br><br>LED 3 "));
-  client.print((value3) ? F("AKTIF") : F("TIDAK AKTIF"));
+  client.print((value3) ? F("ACTIVE") : F("INACTIVE"));
   client.print(F("<br><a href='http://"));
   client.print(WiFi.localIP());
   client.print(F("/gpio3/1'>ON</a> | <a href='http://"));
@@ -167,7 +167,7 @@ void loop() {
   client.print(F("/gpio3/0'>OFF</a>"));
 
   client.print(F("<br><br>LED 4 "));
-  client.print((value4) ? F("AKTIF") : F("TIDAK AKTIF"));
+  client.print((value4) ? F("ACTIVE") : F("INACTIVE"));
   client.print(F("<br><a href='http://"));
   client.print(WiFi.localIP());
   client.print(F("/gpio4/1'>ON</a> | <a href='http://"));
